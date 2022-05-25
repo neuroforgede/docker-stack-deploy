@@ -12,12 +12,12 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="docker-dsp",
+    name="docker-sdp",
     scripts=["bin/docker-sdp"],
     version="0.1.0",
     author="NeuroForge GmbH & Co. KG",
     author_email="kontakt@neuroforge.de",
-    description="docker-dsp",
+    description="docker-sdp",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://neuroforge.de/",
