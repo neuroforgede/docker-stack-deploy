@@ -7,7 +7,7 @@ import hashlib
 import subprocess
 from copy import deepcopy
 
-VERBOSE: bool = os.getenv("SWARM_DEPLOYER_VERBOSE") == "1"
+VERBOSE: bool = os.getenv("DOCKER_SWARM_DEPLOY") == "1" or os.getenv("SWARM_DEPLOYER_VERBOSE") == "1"
 WORKING_DIRECTORY = os.getcwd()
 
 
