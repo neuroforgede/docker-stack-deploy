@@ -12,16 +12,16 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="docker-stack-deploy",
+    name="docker-dsp",
     scripts=["bin/docker-sdp"],
     version="0.1.0",
     author="NeuroForge GmbH & Co. KG",
     author_email="kontakt@neuroforge.de",
-    description="docker-stack-deploy",
+    description="docker-dsp",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://neuroforge.de/",
-    package_data={"docker-stack-deploy": ["py.typed"]},
+    package_data={"docker_stack_deploy": ["py.typed"]},
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3.8",

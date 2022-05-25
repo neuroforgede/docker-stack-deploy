@@ -5,6 +5,13 @@ docker-stack-deploy (docker-dsp) is a utility that wraps around dockers to but a
 
 - appends the first 12 characters of the SHA-1 hash of the contents of any config/secret to the name to ensure rolling updates always work
 
+Installation
+------------
+
+```
+pip3 install https://codeload.github.com/neuroforgede/docker-stack-deploy/zip/refs/tags/0.1.0
+```
+
 Usage
 -----
 
