@@ -9,7 +9,7 @@ Installation
 ------------
 
 ```
-pip3 install https://codeload.github.com/neuroforgede/docker-stack-deploy/zip/refs/tags/0.1.0
+pip3 install https://codeload.github.com/neuroforgede/docker-stack-deploy/zip/refs/tags/0.1.1
 ```
 
 Usage
