@@ -1,0 +1,45 @@
+{
+    "python.envFile": "${workspaceRoot}/.env",
+
+    "python.sortImports.args": ["-rc", "--atomic"],
+
+    "python.formatting.provider": "black",
+    "python.formatting.autopep8Path": "${workspaceFolder}/.venv/bin/autopep8",
+    "python.formatting.autopep8Args": [
+        "--max-line-length",
+        "120",
+        "--experimental"
+    ],
+
+    "editor.formatOnPaste": false,
+
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true,
+    "python.linting.maxNumberOfProblems": 100,
+    "python.linting.ignorePatterns": [".vscode/*.py", "**/site-packages/**/*.py"],
+    "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylintPath": "${workspaceFolder}/venv/bin/pylint",
+    "python.linting.mypyEnabled": false,
+
+    "python.linting.pylintArgs": ["--disable", "I0011"],
+    "python.linting.flake8Args": ["--ignore=E24,W504,E501", "--verbose", "--max-line-length=120"],
+
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [
+        "tests",
+        "-v",
+        "-s",
+        "--no-cov"
+    ],
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    "python.testing.cwd": "${workspaceFolder}",
+
+    "[python]": {
+        "editor.rulers": [
+            79,
+            120
+        ]
+    }
+}

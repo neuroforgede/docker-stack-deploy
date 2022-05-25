@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+from docker_stack_deploy.cli import deployer
+
+deployer.main()
+exit(0)
