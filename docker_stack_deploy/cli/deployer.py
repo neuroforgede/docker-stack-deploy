@@ -190,6 +190,8 @@ docker-stack-deploy (docker-sdp) is a utility that wraps around dockers to but a
 
 - appends the first 12 characters of the SHA-1 hash of the contents of any config/secret to the name to ensure rolling updates always work
 
+Usage: docker-dsp stack deploy [...]
+
 Usage of docker stack deploy follows:"""
     )
     subprocess.check_call(
