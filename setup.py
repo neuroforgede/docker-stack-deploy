@@ -14,7 +14,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name="docker-sdp",
     scripts=["bin/docker-sdp"],
-    version="0.1.1",
+    version="0.1.2",
     author="NeuroForge GmbH & Co. KG",
     author_email="kontakt@neuroforge.de",
     description="docker-sdp",
