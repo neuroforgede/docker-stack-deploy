@@ -205,7 +205,7 @@ Usage of docker stack deploy follows:"""
 
 def main() -> None:
     if len(sys.argv) >= 3:
-        if sys.argv[2] == "stack" and sys.argv[3] == "deploy":
+        if sys.argv[1] == "stack" and sys.argv[2] == "deploy":
             docker_stack_deploy()
             return
     else:
