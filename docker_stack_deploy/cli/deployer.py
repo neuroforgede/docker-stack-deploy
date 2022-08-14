@@ -5,9 +5,10 @@ import sys
 import os
 import hashlib
 import subprocess
+import collections
 from copy import deepcopy
 
-VERBOSE: bool = os.getenv("DOCKER_SWARM_DEPLOY") == "1" or os.getenv("SWARM_DEPLOYER_VERBOSE") == "1"
+VERBOSE: bool = os.getenv("DOCKER_SWARM_DEPLOY_VERBOSE") == "1" or os.getenv("SWARM_DEPLOYER_VERBOSE") == "1"
 WORKING_DIRECTORY = os.getcwd()
 
 
@@ -28,16 +29,22 @@ def augment_secrets_or_config(
     new_keys: Dict[str, str] = dict()
 
     for key, definition in definitions.items():
+        augmented_definition = deepcopy(definition)
+
         if "name" in definition:
-            raise AssertionError(f"name detected in {key_singular}, not supported yet")
+            if VERBOSE:
+                print(f"name detected in definition with key {key}. Skipping auto-rotation")
+            
+            augmented[key] = augmented_definition
+            # leave the key as is, as we will not do any auto-rotation anyways
+            new_keys[key] = key
+            continue
 
         path = definition.get("file")
         if not path:
             raise AssertionError(
                 f"file path not set in {key_singular}, not supported yet"
             )
-
-        augmented_definition = deepcopy(definition)
 
         path = os.path.join(WORKING_DIRECTORY, path)
 
@@ -75,6 +82,8 @@ def augment_services(
         if "secrets" in augmented_service_definition:
             augmented_secret_list = []
             for elem in augmented_service_definition["secrets"]:
+                if not isinstance(elem, collections.Mapping):
+                    raise AssertionError(f"secret {elem} in service {service_key} was not defined as a mapping.  This syntax is unsupported by docker-stack-deploy.")
                 augmented_secret_list.append(
                     {**elem, "source": new_secret_keys[elem["source"]]}
                 )
@@ -84,6 +93,8 @@ def augment_services(
         if "configs" in augmented_service_definition:
             augmented_config_list = []
             for elem in augmented_service_definition["configs"]:
+                if not isinstance(elem, collections.Mapping):
+                    raise AssertionError(f"config {elem} in service {service_key} was not defined as a mapping. This syntax is unsupported by docker-stack-deploy")
                 augmented_config_list.append(
                     {**elem, "source": new_config_keys[elem["source"]]}
                 )
