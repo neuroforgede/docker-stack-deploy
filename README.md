@@ -22,7 +22,7 @@ secrets:
 
 This however requires manually wrapping the deployment script in a process that generates this hash.
 
-With docker-stack-deploy, this is not required anymore. docker-stack-deploy is a small python script that wraps around the actual `docker stack deploy`` command and intercepts any stack files in the arguments. Then, it rewrites the stack files by appending the hash like so:
+With docker-stack-deploy, this is not required anymore. docker-stack-deploy is a small python script that wraps around the actual `docker stack deploy` command and intercepts any stack files in the arguments. Then, it rewrites the stack files by appending the hash like so:
 
 ```
 secrets:
