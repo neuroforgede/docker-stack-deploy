@@ -32,13 +32,13 @@ secrets:
 
 Next, it searches for all occurences of the secret/config in service definitions and remaps them accordingly.
 
-Note: Currently (in version 0.2.0), any manually generated secret names and configs cause an error. In the future, docker-stack-deploy will probably leave these configs/secrets untouched.
+Any manually generated secret names and config names (set via the name property) will be left untouched.
 
 Installation
 ------------
 
 ```
-pip3 install https://github.com/neuroforgede/docker-stack-deploy/archive/refs/tags/0.2.0.zip
+pip3 install https://github.com/neuroforgede/docker-stack-deploy/archive/refs/tags/0.2.1.zip
 ```
 
 Usage
