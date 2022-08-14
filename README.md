@@ -32,13 +32,13 @@ secrets:
 
 Next, it searches for all occurences of the secret/config in service definitions and remaps them accordingly.
 
-Note: Currently (in version 0.1.2), any manually generated secret names and configs cause an error. In the future, docker-stack-deploy will probably leave these configs/secrets untouched.
+Note: Currently (in version 0.2.0), any manually generated secret names and configs cause an error. In the future, docker-stack-deploy will probably leave these configs/secrets untouched.
 
 Installation
 ------------
 
 ```
-pip3 install https://github.com/neuroforgede/docker-stack-deploy/archive/refs/tags/0.1.2.zip
+pip3 install https://github.com/neuroforgede/docker-stack-deploy/archive/refs/tags/0.2.0.zip
 ```
 
 Usage
@@ -50,7 +50,7 @@ In your docker stack deploy commands simply replace `docker` with `docker-sdp`. 
 docker-sdp stack deploy -c my_stack.yml mystack
 ```
 
-It also supports multiple stack files (inheritance)
+It also supports multiple stack files (inheritance) as long as secrets are not mixed between the files.
 
 ```
 docker-sdp stack deploy -c my_stack.1.yml -c my_stack.2.yml mystack
