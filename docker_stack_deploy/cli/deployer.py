@@ -137,6 +137,11 @@ def docker_stack_deploy() -> None:
         if stack_file in new_stack_files:
             raise AssertionError(f"repeated stackfile {stack_file}")
 
+        merged_augmented_secrets = dict()
+        merged_new_secret_keys = dict()
+        merged_augmented_configs = dict()
+        merged_new_config_keys = dict()
+
         with open(stack_file) as stack_yml:
             parsed = yaml.load(stack_yml.read(), yaml.FullLoader)
 
@@ -145,17 +150,21 @@ def docker_stack_deploy() -> None:
             augmented_secrets, new_secret_keys = augment_secrets_or_config(
                 parsed.get("secrets", dict()), "secrets"
             )
+            merged_augmented_secrets = {**merged_augmented_secrets, **augmented_secrets}
+            merged_new_secret_keys = {**merged_new_secret_keys, **new_secret_keys}
             parsed_augmented["secrets"] = augmented_secrets
 
             augmented_configs, new_config_keys = augment_secrets_or_config(
                 parsed.get("configs", dict()), "configs"
             )
+            merged_augmented_configs = {**merged_augmented_configs, **augmented_configs}
+            merged_new_config_keys = {**merged_new_config_keys, **new_config_keys}
             parsed_augmented["configs"] = augmented_configs
 
             augmented_services = augment_services(
                 parsed.get("services", dict()),
-                new_secret_keys=new_secret_keys,
-                new_config_keys=new_config_keys,
+                new_secret_keys=merged_new_secret_keys,
+                new_config_keys=merged_new_config_keys,
             )
             parsed_augmented["services"] = augmented_services
 
