@@ -30,7 +30,7 @@ secrets:
     file: ./my/secret
 ```
 
-Any manually generated secret names are kept (starting in version >= 0.2)
+Any manually generated secret names and configs cause an error. In the future, docker-stack-deploy will probably leave these configs/secrets untouched.
 
 Installation
 ------------
