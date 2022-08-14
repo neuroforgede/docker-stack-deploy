@@ -30,7 +30,9 @@ secrets:
     file: ./my/secret
 ```
 
-Any manually generated secret names and configs cause an error. In the future, docker-stack-deploy will probably leave these configs/secrets untouched.
+Next, it searches for all occurences of the secret/config in service definitions and remaps them accordingly.
+
+Note: Currently (in version 0.1.2), any manually generated secret names and configs cause an error. In the future, docker-stack-deploy will probably leave these configs/secrets untouched.
 
 Installation
 ------------
