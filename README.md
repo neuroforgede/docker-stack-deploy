@@ -50,7 +50,7 @@ In your docker stack deploy commands simply replace `docker` with `docker-sdp`. 
 docker-sdp stack deploy -c my_stack.yml mystack
 ```
 
-It also supports multiple stack files (inheritance)
+It also supports multiple stack files (inheritance) as long as secrets are not mixed between the files.
 
 ```
 docker-sdp stack deploy -c my_stack.1.yml -c my_stack.2.yml mystack
