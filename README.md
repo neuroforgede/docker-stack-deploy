@@ -1,7 +1,7 @@
+Proudly made by [NeuroForge](https://neuroforge.de/) in Bayreuth, Germany.
+
 docker-stack-deploy (docker-sdp)
 ================================
-
-Proudly made by [NeuroForge](https://neuroforge.de/) in Bayreuth, Germany.
 
 docker-stack-deploy (docker-sdp) is a utility that wraps around dockers to but adds the following features:
 
