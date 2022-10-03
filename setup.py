@@ -14,7 +14,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setuptools.setup(
     name="docker-sdp",
     scripts=["bin/docker-sdp"],
-    version="0.2.2",
+    version="0.2.3",
     author="NeuroForge GmbH & Co. KG",
     author_email="kontakt@neuroforge.de",
     description="docker-sdp",
@@ -22,7 +22,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://neuroforge.de/",
     package_data={"docker_stack_deploy": ["py.typed"]},
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     classifiers=[
         "Programming Language :: Python :: 3.8",
         "License :: OSI Approved :: MIT License",
