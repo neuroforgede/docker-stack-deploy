@@ -1,3 +1,5 @@
+Proudly made by [NeuroForge](https://neuroforge.de/) in Bayreuth, Germany.
+
 docker-stack-deploy (docker-sdp)
 ================================
 
