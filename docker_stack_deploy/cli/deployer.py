@@ -1,3 +1,4 @@
+from genericpath import isfile
 from tempfile import NamedTemporaryFile
 from typing import Dict, Any, Tuple, List, Literal
 import yaml
@@ -179,7 +180,12 @@ def docker_stack_deploy() -> None:
     for argv_idx, stack_file in all_stack_files:
         forwarded_params[argv_idx - 1] = new_stack_files[stack_file]
 
-    new_cmd = ["/bin/docker", *forwarded_params]
+    if os.path.isfile("/bin/docker"):
+        docker_binary = "/bin/docker"
+    elif os.path.isfile("/usr/bin/docker"):
+        docker_binary = "/usr/bin/docker"
+
+    new_cmd = [docker_binary, *forwarded_params]
     if VERBOSE:
         print("running docker command:")
         print(" ".join(new_cmd))
