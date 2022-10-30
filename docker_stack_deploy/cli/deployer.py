@@ -117,10 +117,6 @@ def find_all_stack_files(argv: List[str]) -> List[Tuple[int, str]]:
             found_c = True
             continue
         if found_c:
-            if not value.endswith("yml") and not value.endswith("yaml"):
-                raise AssertionError(
-                    f"expected stack file ending in yml or yaml at cli index {index}"
-                )
             ret.append((index, value))
             found_c = False
 
@@ -134,82 +130,94 @@ def private_opener(path, flags):
 def docker_stack_deploy() -> None:
     all_stack_files = find_all_stack_files(sys.argv)
     new_stack_files: Dict[str, str] = dict()
-    for argv_idx, stack_file in all_stack_files:
-        if stack_file in new_stack_files:
-            raise AssertionError(f"repeated stackfile {stack_file}")
+    try:
+        for argv_idx, stack_file in all_stack_files:
+            if stack_file in new_stack_files:
+                raise AssertionError(f"repeated stackfile {stack_file}")
 
-        merged_augmented_secrets = dict()
-        merged_new_secret_keys = dict()
-        merged_augmented_configs = dict()
-        merged_new_config_keys = dict()
+            merged_augmented_secrets = dict()
+            merged_new_secret_keys = dict()
+            merged_augmented_configs = dict()
+            merged_new_config_keys = dict()
 
-        with open(stack_file) as stack_yml:
-            parsed = yaml.load(stack_yml.read(), yaml.FullLoader)
+            _stackfile_path = stack_file
+            if _stackfile_path == '-':
+                _stackfile_path = '/dev/stdin'
 
-            parsed_augmented = deepcopy(parsed)
+            with open(_stackfile_path) as stack_yml:
+                try:
+                    parsed = yaml.load(stack_yml.read(), yaml.FullLoader)
+                except:
+                    print(f"failed to parse stackfile {stack_file}", file=sys.stderr)
+                    raise
 
-            augmented_secrets, new_secret_keys = augment_secrets_or_config(
-                parsed.get("secrets", dict()), "secrets"
-            )
-            merged_augmented_secrets = {**merged_augmented_secrets, **augmented_secrets}
-            merged_new_secret_keys = {**merged_new_secret_keys, **new_secret_keys}
-            parsed_augmented["secrets"] = augmented_secrets
+                parsed_augmented = deepcopy(parsed)
 
-            augmented_configs, new_config_keys = augment_secrets_or_config(
-                parsed.get("configs", dict()), "configs"
-            )
-            merged_augmented_configs = {**merged_augmented_configs, **augmented_configs}
-            merged_new_config_keys = {**merged_new_config_keys, **new_config_keys}
-            parsed_augmented["configs"] = augmented_configs
+                augmented_secrets, new_secret_keys = augment_secrets_or_config(
+                    parsed.get("secrets", dict()), "secrets"
+                )
+                merged_augmented_secrets = {**merged_augmented_secrets, **augmented_secrets}
+                merged_new_secret_keys = {**merged_new_secret_keys, **new_secret_keys}
+                parsed_augmented["secrets"] = augmented_secrets
 
-            augmented_services = augment_services(
-                parsed.get("services", dict()),
-                new_secret_keys=merged_new_secret_keys,
-                new_config_keys=merged_new_config_keys,
-            )
-            parsed_augmented["services"] = augmented_services
+                augmented_configs, new_config_keys = augment_secrets_or_config(
+                    parsed.get("configs", dict()), "configs"
+                )
+                merged_augmented_configs = {**merged_augmented_configs, **augmented_configs}
+                merged_new_config_keys = {**merged_new_config_keys, **new_config_keys}
+                parsed_augmented["configs"] = augmented_configs
 
-            with NamedTemporaryFile("w", delete=False) as file:
-                new_stack_files[stack_file] = file.name
-                yaml.dump(parsed_augmented, file)
-                if VERBOSE:
-                    print(f"augmented stack file for {stack_file}:\n")
-                    print(yaml.dump(parsed_augmented))
+                augmented_services = augment_services(
+                    parsed.get("services", dict()),
+                    new_secret_keys=merged_new_secret_keys,
+                    new_config_keys=merged_new_config_keys,
+                )
+                parsed_augmented["services"] = augmented_services
 
-    forwarded_params: List[str] = sys.argv[1:]
-    for argv_idx, stack_file in all_stack_files:
-        forwarded_params[argv_idx - 1] = new_stack_files[stack_file]
+                with NamedTemporaryFile("w", delete=False) as file:
+                    new_stack_files[stack_file] = file.name
+                    yaml.dump(parsed_augmented, file)
+                    if VERBOSE:
+                        print(f"augmented stack file for {stack_file}:\n")
+                        print(yaml.dump(parsed_augmented))
 
-    if os.path.isfile("/bin/docker"):
-        docker_binary = "/bin/docker"
-    elif os.path.isfile("/usr/bin/docker"):
-        docker_binary = "/usr/bin/docker"
+        forwarded_params: List[str] = sys.argv[1:]
+        for argv_idx, stack_file in all_stack_files:
+            forwarded_params[argv_idx - 1] = new_stack_files[stack_file]
 
-    new_cmd = [docker_binary, *forwarded_params]
-    if VERBOSE:
-        print("running docker command:")
-        print(" ".join(new_cmd))
-        print("")
+        if os.path.isfile("/bin/docker"):
+            docker_binary = "/bin/docker"
+        elif os.path.isfile("/usr/bin/docker"):
+            docker_binary = "/usr/bin/docker"
 
-    subprocess.check_call(
-        new_cmd,
-        env={
-            **os.environ,
-        },
-        cwd=os.getcwd(),
-    )
-    log("\nsuccess.")
+        new_cmd = [docker_binary, *forwarded_params]
+        if VERBOSE:
+            print("running docker command:")
+            print(" ".join(new_cmd))
+            print("")
 
-    log("cleaning up.")
-    for argv_idx, stack_file in all_stack_files:
-        os.unlink(new_stack_files[stack_file])
-    log("done.")
+        subprocess.check_call(
+            new_cmd,
+            env={
+                **os.environ,
+            },
+            cwd=os.getcwd(),
+        )
+        log("\nsuccess.")
+    finally:
+        log("cleaning up.")
+        for argv_idx, stack_file in all_stack_files:
+            try:
+                os.unlink(new_stack_files[stack_file])
+            except:
+                pass
+        log("done.")
 
 
 def usage() -> None:
     print(
         """
-docker-stack-deploy (docker-sdp) v0.2.4
+docker-stack-deploy (docker-sdp) v0.2.5
 =======================================
 
 docker-stack-deploy (docker-sdp) is a utility that wraps around dockers to but adds the following features:
