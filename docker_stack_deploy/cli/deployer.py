@@ -9,7 +9,10 @@ import subprocess
 import collections
 from copy import deepcopy
 
-VERBOSE: bool = os.getenv("DOCKER_SWARM_DEPLOY_VERBOSE") == "1" or os.getenv("SWARM_DEPLOYER_VERBOSE") == "1"
+VERBOSE: bool = (
+    os.getenv("DOCKER_SWARM_DEPLOY_VERBOSE") == "1"
+    or os.getenv("SWARM_DEPLOYER_VERBOSE") == "1"
+)
 WORKING_DIRECTORY = os.getcwd()
 
 
@@ -34,8 +37,10 @@ def augment_secrets_or_config(
 
         if "name" in definition:
             if VERBOSE:
-                print(f"name detected in definition with key {key}. Skipping auto-rotation")
-            
+                print(
+                    f"name detected in definition with key {key}. Skipping auto-rotation"
+                )
+
             augmented[key] = augmented_definition
             # leave the key as is, as we will not do any auto-rotation anyways
             new_keys[key] = key
@@ -84,7 +89,9 @@ def augment_services(
             augmented_secret_list = []
             for elem in augmented_service_definition["secrets"]:
                 if not isinstance(elem, collections.Mapping):
-                    raise AssertionError(f"secret {elem} in service {service_key} was not defined as a mapping.  This syntax is unsupported by docker-stack-deploy.")
+                    raise AssertionError(
+                        f"secret {elem} in service {service_key} was not defined as a mapping.  This syntax is unsupported by docker-stack-deploy."
+                    )
                 augmented_secret_list.append(
                     {**elem, "source": new_secret_keys[elem["source"]]}
                 )
@@ -95,7 +102,9 @@ def augment_services(
             augmented_config_list = []
             for elem in augmented_service_definition["configs"]:
                 if not isinstance(elem, collections.Mapping):
-                    raise AssertionError(f"config {elem} in service {service_key} was not defined as a mapping. This syntax is unsupported by docker-stack-deploy")
+                    raise AssertionError(
+                        f"config {elem} in service {service_key} was not defined as a mapping. This syntax is unsupported by docker-stack-deploy"
+                    )
                 augmented_config_list.append(
                     {**elem, "source": new_config_keys[elem["source"]]}
                 )
@@ -141,8 +150,8 @@ def docker_stack_deploy() -> None:
             merged_new_config_keys = dict()
 
             _stackfile_path = stack_file
-            if _stackfile_path == '-':
-                _stackfile_path = '/dev/stdin'
+            if _stackfile_path == "-":
+                _stackfile_path = "/dev/stdin"
 
             with open(_stackfile_path) as stack_yml:
                 try:
@@ -156,14 +165,20 @@ def docker_stack_deploy() -> None:
                 augmented_secrets, new_secret_keys = augment_secrets_or_config(
                     parsed.get("secrets", dict()), "secrets"
                 )
-                merged_augmented_secrets = {**merged_augmented_secrets, **augmented_secrets}
+                merged_augmented_secrets = {
+                    **merged_augmented_secrets,
+                    **augmented_secrets,
+                }
                 merged_new_secret_keys = {**merged_new_secret_keys, **new_secret_keys}
                 parsed_augmented["secrets"] = augmented_secrets
 
                 augmented_configs, new_config_keys = augment_secrets_or_config(
                     parsed.get("configs", dict()), "configs"
                 )
-                merged_augmented_configs = {**merged_augmented_configs, **augmented_configs}
+                merged_augmented_configs = {
+                    **merged_augmented_configs,
+                    **augmented_configs,
+                }
                 merged_new_config_keys = {**merged_new_config_keys, **new_config_keys}
                 parsed_augmented["configs"] = augmented_configs
 
