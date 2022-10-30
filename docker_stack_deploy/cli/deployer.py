@@ -113,7 +113,7 @@ def find_all_stack_files(argv: List[str]) -> List[Tuple[int, str]]:
     found_c = False
 
     for index, value in zip(range(0, len(argv)), argv):
-        if value == "-c":
+        if value == "-c" or value == "--compose-file":
             found_c = True
             continue
         if found_c:
