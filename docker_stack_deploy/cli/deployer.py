@@ -52,7 +52,8 @@ def augment_secrets_or_config(
                 f"file path not set in {key_singular}, not supported yet"
             )
 
-        path = os.path.join(WORKING_DIRECTORY, path)
+        if not path.startswith('/'):
+            path = os.path.join(WORKING_DIRECTORY, path)
 
         if not os.path.exists(path):
             raise AssertionError(f"did not find file at path {path}")
