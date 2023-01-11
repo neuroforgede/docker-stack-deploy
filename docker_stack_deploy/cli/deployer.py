@@ -244,8 +244,12 @@ Usage: docker-dsp stack deploy [...]
 
 Usage of docker stack deploy follows:"""
     )
+    if os.path.isfile("/bin/docker"):
+        docker_binary = "/bin/docker"
+    elif os.path.isfile("/usr/bin/docker"):
+        docker_binary = "/usr/bin/docker"
     subprocess.check_call(
-        ["/bin/docker", "stack", "deploy", "--help"],
+        [docker_binary, "stack", "deploy", "--help"],
         env={
             **os.environ,
         },
