@@ -233,7 +233,7 @@ def docker_stack_deploy() -> None:
 def usage() -> None:
     print(
         """
-docker-stack-deploy (docker-sdp) v0.2.6
+docker-stack-deploy (docker-sdp) v0.2.7
 =======================================
 
 docker-stack-deploy (docker-sdp) is a utility that wraps around dockers to but adds the following features:
