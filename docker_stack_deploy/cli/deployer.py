@@ -35,17 +35,6 @@ def augment_secrets_or_config(
     for key, definition in definitions.items():
         augmented_definition = deepcopy(definition)
 
-        if "name" in definition:
-            if VERBOSE:
-                print(
-                    f"name detected in definition with key {key}. Skipping auto-rotation"
-                )
-
-            augmented[key] = augmented_definition
-            # leave the key as is, as we will not do any auto-rotation anyways
-            new_keys[key] = key
-            continue
-
         path = definition.get("file")
         if not path:
             raise AssertionError(
@@ -59,6 +48,17 @@ def augment_secrets_or_config(
             raise AssertionError(f"did not find file at path {path}")
 
         augmented_definition["file"] = os.path.normpath(path)
+
+        if "name" in definition:
+            if VERBOSE:
+                print(
+                    f"name detected in definition with key {key}. Skipping auto-rotation"
+                )
+
+            augmented[key] = augmented_definition
+            # leave the key as is, as we will not do any auto-rotation anyways
+            new_keys[key] = key
+            continue
 
         with open(path, "rb") as secret_file:
             version = hashlib.sha1(secret_file.read()).hexdigest()[:12]
