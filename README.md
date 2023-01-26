@@ -13,7 +13,7 @@ Why?
 Docker Stack files are a great way to organize your deployments. The problem is, though, that Docker Swarm does not allow changes in secrets and configs.
 This means that you have to manually rotate configs/secrets yourself.
 
-Another smart solutions people have come up with is appending the hashcode of the secret/config via an env var in the stack file, like so:
+Another smart solution people have come up with is appending the hashcode of the secret/config via an env var in the stack file, like so:
 
 ```
 secrets:
