@@ -113,11 +113,11 @@ def augment_services(
             augmented_service_definition["configs"] = augmented_config_list
 
         if "env_file" in augmented_service_definition:
+            original_env_file = augmented_service_definition["env_file"]
             if not isinstance(original_env_file, str) and not isinstance(original_env_file, list):
                 raise AssertionError(
                     f"env_file in {service_key} was not defined as either a string or a mapping. This is invalid according to the compose spec."
                 )
-            original_env_file = augmented_service_definition["env_file"]
             if isinstance(original_env_file, list):
                 augmented_service_definition["env_file"] = [os.path.normpath(elem) for elem in original_env_file]
             else:
