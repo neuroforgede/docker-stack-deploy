@@ -112,6 +112,13 @@ def augment_services(
 
             augmented_service_definition["configs"] = augmented_config_list
 
+        if "env_file" in augmented_service_definition:
+            original_env_file = augmented_service_definition["env_file"]
+            if isinstance(original_env_file, list):
+                augmented_service_definition["env_file"] = [os.path.normpath(elem) for elem in original_env_file]
+            else:
+                augmented_service_definition["env_file"] = os.path.normpath(original_env_file)
+
         augmented[service_key] = augmented_service_definition
 
     return augmented
