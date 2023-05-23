@@ -16,6 +16,13 @@ VERBOSE: bool = (
 WORKING_DIRECTORY = os.getcwd()
 
 
+def full_path(path: str) -> str:
+    ret_path = os.path.abspath(path)
+    if not os.path.exists(ret_path):
+        raise AssertionError(f"did not find file at path {ret_path}")
+    return ret_path
+
+
 def log(text: str) -> None:
     if VERBOSE:
         print(text)
@@ -119,9 +126,9 @@ def augment_services(
                     f"env_file in {service_key} was not defined as either a string or a list. This is invalid according to the compose spec."
                 )
             if isinstance(original_env_file, list):
-                augmented_service_definition["env_file"] = [os.path.normpath(elem) for elem in original_env_file]
+                augmented_service_definition["env_file"] = [full_path(elem) for elem in original_env_file]
             else:
-                augmented_service_definition["env_file"] = os.path.normpath(original_env_file)
+                augmented_service_definition["env_file"] = full_path(original_env_file)
 
         augmented[service_key] = augmented_service_definition
 
