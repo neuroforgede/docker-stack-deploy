@@ -40,7 +40,7 @@ Installation
 ------------
 
 ```
-pip3 install https://github.com/neuroforgede/docker-stack-deploy/archive/refs/tags/0.2.10.zip
+pip3 install https://github.com/neuroforgede/docker-stack-deploy/archive/refs/tags/0.2.11.zip
 ```
 
 Usage
