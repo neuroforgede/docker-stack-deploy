@@ -42,6 +42,18 @@ def augment_secrets_or_config(
     for key, definition in definitions.items():
         augmented_definition = deepcopy(definition)
 
+        external = definition.get("external", False)
+        if external:
+            if VERBOSE:
+                print(
+                    f"external=true detected in definition with key {key}. Skipping auto-rotation"
+                )
+
+            augmented[key] = augmented_definition
+            # leave the key as is, as we will not do any auto-rotation anyways
+            new_keys[key] = key
+            continue
+
         path = definition.get("file")
         if not path:
             raise AssertionError(
