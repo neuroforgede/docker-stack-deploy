@@ -8,6 +8,7 @@ import hashlib
 import subprocess
 import collections.abc as collections
 from copy import deepcopy
+from shutil import which
 
 VERBOSE: bool = (
     os.getenv("DOCKER_SWARM_DEPLOY_VERBOSE") == "1"
@@ -235,6 +236,8 @@ def docker_stack_deploy() -> None:
             docker_binary = "/bin/docker"
         elif os.path.isfile("/usr/bin/docker"):
             docker_binary = "/usr/bin/docker"
+        else:
+            docker_binary = which("docker")
 
         new_cmd = [docker_binary, *forwarded_params]
         if VERBOSE:
@@ -278,6 +281,8 @@ Usage of docker stack deploy follows:"""
         docker_binary = "/bin/docker"
     elif os.path.isfile("/usr/bin/docker"):
         docker_binary = "/usr/bin/docker"
+    else:
+        docker_binary = which("docker")
     subprocess.check_call(
         [docker_binary, "stack", "deploy", "--help"],
         env={
