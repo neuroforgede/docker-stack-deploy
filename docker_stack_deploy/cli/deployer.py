@@ -166,6 +166,16 @@ def find_all_stack_files(argv: List[str]) -> List[Tuple[int, str]]:
 def private_opener(path, flags):
     return os.open(path, flags, 0o600)
 
+if sys.version_info >= (3,3):
+    from shutil import which
+else:
+    def which(pgm):
+        path = os.getenv("PATH")
+        for p in path.split(os.path.pathsep):
+            p = os.path.join(p, pgm)
+            if os.path.exists(p) and os.access(p, os.X_OK):
+                return p
+
 
 def docker_stack_deploy() -> None:
     all_stack_files = find_all_stack_files(sys.argv)
@@ -235,6 +245,8 @@ def docker_stack_deploy() -> None:
             docker_binary = "/bin/docker"
         elif os.path.isfile("/usr/bin/docker"):
             docker_binary = "/usr/bin/docker"
+        else:
+            docker_binary = which("docker")
 
         new_cmd = [docker_binary, *forwarded_params]
         if VERBOSE:
@@ -278,6 +290,8 @@ Usage of docker stack deploy follows:"""
         docker_binary = "/bin/docker"
     elif os.path.isfile("/usr/bin/docker"):
         docker_binary = "/usr/bin/docker"
+    else:
+        docker_binary = which("docker")
     subprocess.check_call(
         [docker_binary, "stack", "deploy", "--help"],
         env={
