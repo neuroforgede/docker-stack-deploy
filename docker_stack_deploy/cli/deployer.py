@@ -8,6 +8,7 @@ import hashlib
 import subprocess
 import collections.abc as collections
 from copy import deepcopy
+from shutil import which
 
 VERBOSE: bool = (
     os.getenv("DOCKER_SWARM_DEPLOY_VERBOSE") == "1"
@@ -165,16 +166,6 @@ def find_all_stack_files(argv: List[str]) -> List[Tuple[int, str]]:
 
 def private_opener(path, flags):
     return os.open(path, flags, 0o600)
-
-if sys.version_info >= (3,3):
-    from shutil import which
-else:
-    def which(pgm):
-        path = os.getenv("PATH")
-        for p in path.split(os.path.pathsep):
-            p = os.path.join(p, pgm)
-            if os.path.exists(p) and os.access(p, os.X_OK):
-                return p
 
 
 def docker_stack_deploy() -> None:
