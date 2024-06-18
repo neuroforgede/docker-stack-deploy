@@ -6,7 +6,7 @@ import sys
 import os
 import hashlib
 import subprocess
-import collections.abc as collections
+from collections.abc import Mapping
 from copy import deepcopy
 from shutil import which
 
@@ -109,7 +109,7 @@ def augment_services(
         if "secrets" in augmented_service_definition:
             augmented_secret_list = []
             for elem in augmented_service_definition["secrets"]:
-                if not isinstance(elem, collections.Mapping):
+                if not isinstance(elem, Mapping):
                     raise AssertionError(
                         f"secret {elem} in service {service_key} was not defined as a mapping.  This syntax is unsupported by docker-stack-deploy."
                     )
@@ -122,7 +122,7 @@ def augment_services(
         if "configs" in augmented_service_definition:
             augmented_config_list = []
             for elem in augmented_service_definition["configs"]:
-                if not isinstance(elem, collections.Mapping):
+                if not isinstance(elem, Mapping):
                     raise AssertionError(
                         f"config {elem} in service {service_key} was not defined as a mapping. This syntax is unsupported by docker-stack-deploy"
                     )
